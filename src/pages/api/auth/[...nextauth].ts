@@ -11,7 +11,7 @@ export const authOptions = {
     }),
   ],
   events: {
-    async signIn({ user, account, profile }) { 
+    async signIn({ user, account, profile }): Promise<boolean> { 
       try {
         const { email, name, image } = user;
         await client.query(
@@ -45,10 +45,7 @@ export const authOptions = {
       } catch {
         return false;
       }
-      
-    },
-    async signOut(message) {  },
-    async session(message) {  },
+    }
   }
 }
 
