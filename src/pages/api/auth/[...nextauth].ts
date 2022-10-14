@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import { client } from './../../../services/fauna';
-import { query } from "faunadb";
+import { query as q } from "faunadb";
 
 export const authOptions = {
   providers: [
@@ -15,15 +15,15 @@ export const authOptions = {
       try {
         const { email, name, image } = user;
         await client.query(
-          query.If(
-            query.Not(
-              query.Match(
-                query.Index('user_by_email'), 
-                query.Casefold(email)
+          q.If(
+            q.Not(
+              q.Match(
+                q.Index('user_by_email'), 
+                q.Casefold(email)
               )
             ),
-            query.Create(
-              query.Collection('users'),
+            q.Create(
+              q.Collection('users'),
               {
                 data: {
                   name, 
@@ -32,10 +32,10 @@ export const authOptions = {
                 }
               }
             ),
-            query.Get(
-              query.Match(
-                query.Index('user_by_name'),
-                query.Casefold(email)
+            q.Get(
+              q.Match(
+                q.Index('user_by_name'),
+                q.Casefold(email)
               )
             )
           )
