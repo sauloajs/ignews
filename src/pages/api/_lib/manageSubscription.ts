@@ -51,3 +51,36 @@ export async function saveSubscription(
     );
   }
 }
+
+export async function getUserActiveSubscription(
+  email: string
+) {
+  try {
+    const userActiveSubscription = await client.query(
+      q.Get(
+        q.Intersection([
+          q.Match(
+            q.Index("subscription_by_user_ref"),
+            q.Select(
+              "ref",
+              q.Get(
+                q.Match(
+                  q.Index("user_by_email"),
+                  q.Casefold(email) 
+                )
+              )
+            )
+          ),
+          q.Match(
+            q.Index("subscription_by_status"),
+            "active"
+          )
+        ])
+      )
+    )
+
+    return userActiveSubscription;
+  } catch {
+    return null
+  } 
+}

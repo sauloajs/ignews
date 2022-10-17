@@ -11,7 +11,7 @@ export const authOptions = {
     }),
   ],
   events: {
-    async signIn({ user, account, profile }): Promise<boolean> { 
+    async signIn({ user, account, profile }): Promise<void> { 
       try {
         const { email, name, image } = user;
         await client.query(
@@ -40,10 +40,7 @@ export const authOptions = {
             )
           )
         );
-
-        return true;
       } catch {
-        return false;
       }
     }
   }
